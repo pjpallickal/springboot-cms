@@ -21,7 +21,23 @@ public class CustomerDAOImpl implements CustomerDAO{
     @Override
     public List<Customer> findAll() {
         TypedQuery<Customer> theQuery = entityManager.createQuery("from Customer", Customer.class);
-        List<Customer> customerList= theQuery.getResultList();
-        return customerList;
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public Customer findByID(int id) {
+        return entityManager.find(Customer.class, id);
+    }
+
+    @Override
+    public List<Customer> findByName(String searchValue) {
+        TypedQuery<Customer> theQuery = entityManager.createQuery("from Customer where customerName like CONCAT(:searchValue, '%')", Customer.class);
+        theQuery.setParameter("searchValue", searchValue);
+        return theQuery.getResultList();
+    }
+
+    @Override
+    public Customer save(Customer theCustomer) {
+        return entityManager.merge(theCustomer);
     }
 }
